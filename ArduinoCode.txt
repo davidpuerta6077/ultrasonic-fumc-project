@@ -1,0 +1,78 @@
+
+#include <Wire.h>
+#include <Adafruit_LiquidCrystal.h>
+
+Adafruit_LiquidCrystal lcd(0);
+
+const int TRIGGER_PIN = 12;
+const int ECHO_PIN = 11;
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  lcd.print("Distancia");
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+}
+
+void loop() {
+  digitalWrite(TRIGGER_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN, LOW);
+  
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  int distance = duration / 58; 
+  
+  lcd.setCursor(0, 1);
+  lcd.print(distance);
+  lcd.print(" cm    ");
+  lcd.setBacklight(1);
+  
+  Serial.print("Distancia: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+  
+  if (distance > 50) {
+    digitalWrite(8, HIGH);
+    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(9, LOW);
+    lcd.setBacklight(1);
+  } else {
+    digitalWrite(8, LOW);
+    digitalWrite(9, HIGH);
+    digitalWrite(LED_BUILTIN, HIGH);
+    lcd.setBacklight(0);
+  }
+  
+  delay(100); 
+}
+
+
+
+__________________________________
+
+
+
+#include <Adafruit_LiquidCrystal.h>
+
+int seconds = 10;
+
+Adafruit_LiquidCrystal lcd_1(0);
+
+void setup()
+{
+  lcd_1.begin(16, 2);
+  lcd_1.print("OK");
+}
+
+void loop()
+{
+  lcd_1.setCursor(0, 1);
+  lcd_1.print(seconds);
+  lcd_1.setBacklight(1);
+}
